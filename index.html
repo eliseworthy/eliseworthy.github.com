@@ -2,40 +2,26 @@
 <!--Created by GeoCities Home Page Generator-->
 <HTML>
 <HEAD>
-<META HTTP-EQUIV="Keywords" NAME="Keywords" CONTENT="Hamster Dance, Hampster Dance, The Hamster Dance, Dancing hamster's, original, MeHampster, hamster, web, star, pet, dedodedo, hamster care, Hampton Hampster, karate, racing, hamster house, home, castle, hamster dancing, rodent, pine bedding, wheel, water bottle, drag racing, Hampton Hampster's Hamster House">
 <TITLE>The Hampster Dance</TITLE>
 <STYLE>
-  html { width: 100%; }
-  body {
-    max-width: 770px;
-    margin-left: auto;
-    margin-right: auto;
+  html, body {
+    margin: 0;
+    padding: 0;
     background-color: #FFFFFF;
-    color: #000000;
-    font-family: Times New Roman, serif;
+    overflow-x: hidden;
   }
-  a { color: #0000FF; }
-  a:visited { color: #551A8B; }
-
-  /* Break dance floor out of the body max-width constraint */
   #dance-floor {
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
     width: 100vw;
+    line-height: 0;
   }
-
   .row {
     display: flex;
     flex-wrap: nowrap;
-    overflow: hidden;
-    justify-content: flex-start;
+    width: 100%;
     line-height: 0;
     margin: 0;
     padding: 0;
-    width: 100%;
   }
-
   .row img {
     display: block;
     flex-shrink: 0;
@@ -43,53 +29,13 @@
 </STYLE>
 </HEAD>
 
-<BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#551A8B">
+<BODY BGCOLOR="#FFFFFF">
 
 <audio id="ded" src="originaldedodedo.mp3" loop></audio>
+
 <div id="dance-floor"></div>
 
-<BR><BR>
-
-<CENTER>
-  <TABLE>
-    <TR>
-      <TD VALIGN=TOP ALIGN=LEFT NOWRAP><A HREF="dedodedo.wav"><IMG SRC="hamster-hammy.gif" WIDTH=30 HEIGHT=35 BORDER=0></A></TD>
-      <TD VALIGN=TOP ALIGN=LEFT NOWRAP><A HREF="dedodedo.wav">dedodedo.wav</A></TD>
-      <TD VALIGN=TOP ALIGN=LEFT NOWRAP>14-Aug-97 21:20</TD>
-      <TD VALIGN=TOP ALIGN=LEFT NOWRAP>24K</TD>
-      <TD VALIGN=TOP ALIGN=LEFT><I>audio/wav</I></TD>
-    </TR>
-  </TABLE>
-</CENTER>
-
-<CENTER>Right click on your mouse (hamster) and Save Target As.....<BR><BR>
-<LI><A HREF="#">Hamsterdance Update</A></CENTER><BR><BR>
-<CENTER>Return to <A HREF="#">Main Page</A></CENTER>
-
-<BR><BR>
-
-<CENTER><P><A HREF="#"><IMG SRC="hamster-spins.gif" WIDTH=27 HEIGHT=35 BORDER=0></A></P></CENTER>
-<CENTER><P><A HREF="#">View Guestbook</A></P></CENTER>
-
-<BR>
-<HR>
-
-<CENTER><B>
-This page hosted by <A HREF="#">GeoCities</A>
-&nbsp; Get your own <A HREF="#">Free Home Page</A>
-</B></CENTER>
-
-<BR>
-
-<CENTER>
-  <P>&copy; copyright by Deidre LaCarte</P>
-  <P><FONT FACE="arial" SIZE="1"><A HREF="#">FastCounter by LinkExchange</A></FONT></P>
-  <P>&copy; 1997 <A HREF="mailto:mehampster@aol.com"><I>mehampster@aol.com</I></A><BR>
-  Last Updated November 14, 1999</P>
-</CENTER>
-
 <SCRIPT>
-  // Scale all GIFs to the same height, preserving aspect ratio
   var TARGET_H = 70;
   var gifs = [
     { src: 'hamster-spins.gif', w: 54,  h: 70  },
@@ -101,7 +47,7 @@ This page hosted by <A HREF="#">GeoCities</A>
     return { src: g.src, w: Math.round(g.w * scale), h: TARGET_H };
   });
 
-  // Row pattern matching original: anin, hamu, anin, gerbil, anin, hamwalk, anin, anin, hamu ...
+  // spins, pixel, spins, squirrel, spins, hammy — repeating
   var pattern = [0, 1, 0, 2, 0, 3, 0, 1, 0, 2, 0, 3, 0, 1, 0, 2, 0, 3, 0];
 
   function buildRows() {
@@ -122,7 +68,6 @@ This page hosted by <A HREF="#">GeoCities</A>
         img.src = gif.src;
         img.width = gif.w;
         img.height = gif.h;
-        img.border = 0;
         row.appendChild(img);
       }
       container.appendChild(row);
@@ -132,5 +77,14 @@ This page hosted by <A HREF="#">GeoCities</A>
   buildRows();
   window.addEventListener('resize', buildRows);
 
-  // Autoplay audio on first interaction
-  var aud = document.getElementById
+  // Autoplay on first user interaction (browser requirement)
+  var aud = document.getElementById('ded');
+  function tryPlay() { if (aud) aud.play().catch(function(){}); }
+  tryPlay();
+  ['click', 'keydown', 'touchstart'].forEach(function(e) {
+    document.body.addEventListener(e, tryPlay, { once: true });
+  });
+</SCRIPT>
+
+</BODY>
+</HTML>
