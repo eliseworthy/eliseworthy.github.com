@@ -45,7 +45,7 @@
 
 <BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#551A8B">
 
-<audio id="ded" src="https://www.webhamster.com/myturf/page/0/music" loop></audio>
+<audio id="ded" src="originaldedodedo.mp3" autoplay loop preload="auto"></audio>
 <div id="dance-floor"></div>
 
 <BR><BR>
@@ -132,13 +132,22 @@ This page hosted by <A HREF="#">GeoCities</A>
   buildRows();
   window.addEventListener('resize', buildRows);
 
-  // Autoplay audio on first interaction
+  // Start the music as soon as the page loads. Most browsers block sound
+  // until the visitor interacts with the page, so if the first attempt is
+  // blocked, start it on the first click, tap, or keypress anywhere.
   var aud = document.getElementById('ded');
-  function tryPlay() { if (aud) aud.play().catch(function(){}); }
+  var startEvents = ['pointerdown', 'click', 'keydown', 'touchstart'];
+  function stopListening() {
+    startEvents.forEach(function(e){ document.removeEventListener(e, tryPlay, true); });
+  }
+  function tryPlay() {
+    if (!aud || !aud.paused) { stopListening(); return; }
+    var p = aud.play();
+    if (p && p.then) p.then(stopListening).catch(function(){});
+  }
+  startEvents.forEach(function(e){ document.addEventListener(e, tryPlay, true); });
+  aud.addEventListener('playing', stopListening);
   tryPlay();
-  ['click','keydown','touchstart'].forEach(function(e){
-    document.body.addEventListener(e, tryPlay, { once: true });
-  });
 </SCRIPT>
 
 </BODY>
