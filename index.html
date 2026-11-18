@@ -40,36 +40,58 @@
     display: block;
     flex-shrink: 0;
   }
+
+  /* "Click to dance" banner: only shown when the browser blocks the music */
+  #dance-prompt {
+    display: none;
+    position: fixed;
+    top: 16px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: max-content;
+    max-width: 90vw;
+    z-index: 10;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 8px 16px;
+    background: #FFFF00;
+    border: 4px ridge #FF00FF;
+    color: #FF0000;
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+  }
+  #dance-prompt img { flex-shrink: 0; }
+  #dance-prompt .blink { animation: blink 1s steps(1, end) infinite; }
+  @keyframes blink { 50% { visibility: hidden; } }
+  @media (prefers-reduced-motion: reduce) {
+    #dance-prompt .blink { animation: none; }
+  }
 </STYLE>
 </HEAD>
 
 <BODY BGCOLOR="#FFFFFF" TEXT="#000000" LINK="#0000FF" VLINK="#551A8B">
 
 <audio id="ded" src="originaldedodedo.mp3" autoplay loop preload="auto"></audio>
+<button type="button" id="dance-prompt">
+  <img src="hamster-hammy.gif" width="30" height="35" alt="">
+  <span class="blink">Click to make the hamsters dance!</span>
+  <img src="hamster-hammy.gif" width="30" height="35" alt="">
+</button>
 <div id="dance-floor"></div>
 
 <BR><BR>
 
 <CENTER>
-  <TABLE>
-    <TR>
-      <TD VALIGN=TOP ALIGN=LEFT NOWRAP><A HREF="dedodedo.wav"><IMG SRC="hamster-hammy.gif" WIDTH=30 HEIGHT=35 BORDER=0></A></TD>
-      <TD VALIGN=TOP ALIGN=LEFT NOWRAP><A HREF="dedodedo.wav">dedodedo.wav</A></TD>
-      <TD VALIGN=TOP ALIGN=LEFT NOWRAP>14-Aug-97 21:20</TD>
-      <TD VALIGN=TOP ALIGN=LEFT NOWRAP>24K</TD>
-      <TD VALIGN=TOP ALIGN=LEFT><I>audio/wav</I></TD>
-    </TR>
-  </TABLE>
+  <A HREF="https://www.linkedin.com/in/eliseworthy/">LinkedIn</A><BR>
+  <A HREF="https://twitter.com/eliseworthy">Twitter</A><BR>
+  <A HREF="https://mewie.com">mewie.com</A><BR>
+  <A HREF="https://rikeripsum.net">rikeripsum.net</A>
 </CENTER>
-
-<CENTER>Right click on your mouse (hamster) and Save Target As.....<BR><BR>
-<LI><A HREF="#">Hamsterdance Update</A></CENTER><BR><BR>
-<CENTER>Return to <A HREF="#">Main Page</A></CENTER>
-
-<BR><BR>
-
-<CENTER><P><A HREF="#"><IMG SRC="hamster-spins.gif" WIDTH=27 HEIGHT=35 BORDER=0></A></P></CENTER>
-<CENTER><P><A HREF="#">View Guestbook</A></P></CENTER>
 
 <BR>
 <HR>
@@ -133,20 +155,24 @@ This page hosted by <A HREF="#">GeoCities</A>
   window.addEventListener('resize', buildRows);
 
   // Start the music as soon as the page loads. Most browsers block sound
-  // until the visitor interacts with the page, so if the first attempt is
-  // blocked, start it on the first click, tap, or keypress anywhere.
+  // until the visitor interacts with the page; if that happens, show the
+  // "click to dance" banner and start on the first click, tap, or keypress.
   var aud = document.getElementById('ded');
+  var dancePrompt = document.getElementById('dance-prompt');
   var startEvents = ['pointerdown', 'click', 'keydown', 'touchstart'];
-  function stopListening() {
+  function onStarted() {
     startEvents.forEach(function(e){ document.removeEventListener(e, tryPlay, true); });
+    dancePrompt.style.display = 'none';
   }
   function tryPlay() {
-    if (!aud || !aud.paused) { stopListening(); return; }
+    if (!aud.paused) { onStarted(); return; }
     var p = aud.play();
-    if (p && p.then) p.then(stopListening).catch(function(){});
+    if (p && p.then) p.then(onStarted).catch(function(err){
+      if (err && err.name === 'NotAllowedError') dancePrompt.style.display = 'flex';
+    });
   }
   startEvents.forEach(function(e){ document.addEventListener(e, tryPlay, true); });
-  aud.addEventListener('playing', stopListening);
+  aud.addEventListener('playing', onStarted);
   tryPlay();
 </SCRIPT>
 
