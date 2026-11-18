@@ -155,25 +155,28 @@ This page hosted by <A HREF="#">GeoCities</A>
   window.addEventListener('resize', buildRows);
 
   // Start the music as soon as the page loads. Most browsers block sound
-  // until the visitor interacts with the page; if that happens, show the
+  // until the visitor interacts with the page; when that happens, show the
   // "click to dance" banner and start on the first click, tap, or keypress.
+  // Browsers report a block in different ways (Safari may reject with a
+  // different error, pause the music, or say nothing at all), so the banner
+  // simply follows whether the music is actually playing.
   var aud = document.getElementById('ded');
   var dancePrompt = document.getElementById('dance-prompt');
-  var startEvents = ['pointerdown', 'click', 'keydown', 'touchstart'];
-  function onStarted() {
-    startEvents.forEach(function(e){ document.removeEventListener(e, tryPlay, true); });
-    dancePrompt.style.display = 'none';
-  }
+  function showPrompt() { if (aud.paused) dancePrompt.style.display = 'flex'; }
+  function hidePrompt() { dancePrompt.style.display = 'none'; }
   function tryPlay() {
-    if (!aud.paused) { onStarted(); return; }
+    if (!aud.paused) return;
     var p = aud.play();
-    if (p && p.then) p.then(onStarted).catch(function(err){
-      if (err && err.name === 'NotAllowedError') dancePrompt.style.display = 'flex';
-    });
+    if (p && p.catch) p.catch(showPrompt);
   }
-  startEvents.forEach(function(e){ document.addEventListener(e, tryPlay, true); });
-  aud.addEventListener('playing', onStarted);
+  ['pointerdown', 'click', 'keydown', 'touchend'].forEach(function(e){
+    document.addEventListener(e, tryPlay, true);
+  });
+  aud.addEventListener('playing', hidePrompt);
+  aud.addEventListener('pause', showPrompt);
   tryPlay();
+  // If the music still isn't playing after a moment, show the banner.
+  setTimeout(showPrompt, 1500);
 </SCRIPT>
 
 </BODY>
