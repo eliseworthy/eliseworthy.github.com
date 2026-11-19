@@ -4,8 +4,10 @@
 <HEAD>
 <META HTTP-EQUIV="Keywords" NAME="Keywords" CONTENT="Hamster Dance, Hampster Dance, The Hamster Dance, Dancing hamster's, original, MeHampster, hamster, web, star, pet, dedodedo, hamster care, Hampton Hampster, karate, racing, hamster house, home, castle, hamster dancing, rodent, pine bedding, wheel, water bottle, drag racing, Hampton Hampster's Hamster House">
 <TITLE>The Hampster Dance</TITLE>
+<LINK REL="icon" TYPE="image/gif" HREF="hamster-hammy.gif">
 <STYLE>
-  html { width: 100%; }
+  /* Always reserve the scrollbar so the dance floor width stays stable */
+  html { width: 100%; overflow-y: scroll; }
   body {
     max-width: 770px;
     margin-left: auto;
@@ -129,7 +131,9 @@ This page hosted by <A HREF="#">GeoCities</A>
   function buildRows() {
     var container = document.getElementById('dance-floor');
     container.innerHTML = '';
-    var maxW = window.innerWidth;
+    // clientWidth excludes the vertical scrollbar, unlike innerWidth / 100vw
+    var maxW = document.documentElement.clientWidth;
+    container.style.width = maxW + 'px';
 
     pattern.forEach(function(gifIdx) {
       var gif = gifs[gifIdx];
